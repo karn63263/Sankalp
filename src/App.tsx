@@ -106,7 +106,6 @@ const SEG_COLORS = [
 ]
 
 type Page = 'home' | 'register' | 'rulebook'
-type Theme = 'dark' | 'light'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  HOOKS
@@ -265,51 +264,7 @@ const NAV_LINKS: { label: string; page: Page }[] = [
   { label: 'Rulebook', page: 'rulebook' },
 ]
 
-function ThemeToggle({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
-  const isDark = theme === 'dark'
-
-  return (
-    <button
-      type="button"
-      aria-label="Toggle color theme"
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      style={{
-        width: 52,
-        height: 30,
-        borderRadius: 999,
-        border: '1px solid var(--border)',
-        background: 'var(--toggle-bg)',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: isDark ? 'flex-end' : 'flex-start',
-        padding: '4px 6px',
-        cursor: 'pointer',
-        transition: 'all 0.4s ease-in-out',
-        boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.12)',
-      }}
-    >
-      <span
-        style={{
-          width: 18,
-          height: 18,
-          borderRadius: '50%',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'var(--toggle-knob)',
-          color: isDark ? '#2563EB' : '#D97706',
-          fontSize: 10,
-          boxShadow: '0 4px 12px var(--shadow-brand)',
-          transition: 'all 0.4s ease-in-out',
-        }}
-      >
-        {isDark ? '☾' : '☀'}
-      </span>
-    </button>
-  )
-}
-
-function Nav({ page, setPage, theme, setTheme }: { page: Page; setPage: (p: Page) => void; theme: Theme; setTheme: (t: Theme) => void }) {
+function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
   const [open, setOpen] = useState(false)
   const isMobile = useWindowWidth() <= 680
 
@@ -318,11 +273,10 @@ function Nav({ page, setPage, theme, setTheme }: { page: Page; setPage: (p: Page
   return (
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 300,
-      background: 'var(--bg-elevated)',
+      background: 'rgba(0,0,0,0.82)',
       backdropFilter: 'blur(28px) saturate(1.6)',
       WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
-      borderBottom: '1px solid var(--border)',
-      transition: 'all 0.4s ease-in-out',
+      borderBottom: '1px solid rgba(255,255,255,0.07)',
     }}>
       <div style={{
         maxWidth: 1160, margin: '0 auto', padding: '0 28px',
@@ -330,8 +284,8 @@ function Nav({ page, setPage, theme, setTheme }: { page: Page; setPage: (p: Page
       }}>
         {/* Wordmark */}
         <button onClick={() => go('home')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'baseline', gap: 0, padding: 0 }}>
-          <span style={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: 16, letterSpacing: '-0.5px' }}>SANKALP</span>
-          <span style={{ color: 'var(--brand)', fontWeight: 800, fontSize: 16, letterSpacing: '-0.5px' }}>'26</span>
+          <span style={{ color: '#fff', fontWeight: 800, fontSize: 16, letterSpacing: '-0.5px' }}>SANKALP</span>
+          <span style={{ color: '#2B72FF', fontWeight: 800, fontSize: 16, letterSpacing: '-0.5px' }}>'26</span>
         </button>
 
         {/* Desktop links */}
@@ -339,10 +293,10 @@ function Nav({ page, setPage, theme, setTheme }: { page: Page; setPage: (p: Page
           <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             {NAV_LINKS.map(l => (
               <button key={l.page} onClick={() => go(l.page)} style={{
-                background: page === l.page ? 'var(--bg-soft)' : 'none',
+                background: page === l.page ? 'rgba(255,255,255,0.08)' : 'none',
                 border: 'none', cursor: 'pointer',
                 padding: '6px 14px', borderRadius: 7,
-                color: page === l.page ? 'var(--text-primary)' : 'var(--text-muted)',
+                color: page === l.page ? '#fff' : 'rgba(255,255,255,0.42)',
                 fontSize: 13.5, fontWeight: page === l.page ? 500 : 400,
                 transition: 'all 0.15s ease', letterSpacing: '0.1px',
               }}>
@@ -354,23 +308,22 @@ function Nav({ page, setPage, theme, setTheme }: { page: Page; setPage: (p: Page
 
         {/* Right side */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <ThemeToggle theme={theme} setTheme={setTheme} />
           {!isMobile && (
             <button onClick={() => go('register')} style={{
-              background: 'var(--brand)', border: 'none', cursor: 'pointer',
-              padding: '7px 18px', borderRadius: 8, color: theme === 'dark' ? '#fff' : '#1f2937',
+              background: '#0052F0', border: 'none', cursor: 'pointer',
+              padding: '7px 18px', borderRadius: 8, color: '#fff',
               fontSize: 13, fontWeight: 600, letterSpacing: '0.1px',
-              transition: 'all 0.18s ease', boxShadow: '0 0 20px var(--shadow-brand)',
+              transition: 'all 0.18s ease', boxShadow: '0 0 20px rgba(0,82,240,0.35)',
             }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.filter = 'brightness(1.06)' }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.filter = 'none' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1A64FF' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#0052F0' }}
             >
               Register
             </button>
           )}
           {isMobile && (
             <button onClick={() => setOpen(o => !o)} style={{
-              background: open ? 'var(--bg-soft)' : 'none',
+              background: open ? 'rgba(255,255,255,0.08)' : 'none',
               border: 'none', cursor: 'pointer',
               padding: '8px', borderRadius: 7,
               display: 'flex', flexDirection: 'column', gap: 4.5, alignItems: 'center',
@@ -380,7 +333,7 @@ function Nav({ page, setPage, theme, setTheme }: { page: Page; setPage: (p: Page
                 <span key={i} style={{
                   display: 'block', width: 18,
                   height: open && i === 1 ? 0 : 1.5,
-                  background: 'var(--text-primary)',
+                  background: 'rgba(255,255,255,0.7)',
                   borderRadius: 2,
                   transform: open
                     ? i === 0 ? 'rotate(45deg) translate(3px, 4px)'
@@ -398,27 +351,27 @@ function Nav({ page, setPage, theme, setTheme }: { page: Page; setPage: (p: Page
       {/* Mobile menu drawer */}
       {isMobile && open && (
         <div style={{
-          background: 'var(--bg)', borderTop: '1px solid var(--border)',
+          background: '#050505', borderTop: '1px solid rgba(255,255,255,0.07)',
           padding: '6px 16px 20px',
           animation: 'fade-in 0.18s ease',
         }}>
           {NAV_LINKS.map(l => (
             <button key={l.page} onClick={() => go(l.page)} style={{
               display: 'block', width: '100%', textAlign: 'left',
-              background: page === l.page ? 'var(--bg-soft)' : 'none',
+              background: page === l.page ? 'rgba(255,255,255,0.05)' : 'none',
               border: 'none', cursor: 'pointer',
               padding: '13px 12px', borderRadius: 8, marginBottom: 2,
-              color: page === l.page ? 'var(--text-primary)' : 'var(--text-muted)',
+              color: page === l.page ? '#fff' : 'rgba(255,255,255,0.5)',
               fontSize: 15, fontWeight: page === l.page ? 600 : 400,
               transition: 'all 0.12s',
             }}>{l.label}</button>
           ))}
           <button onClick={() => go('register')} style={{
             display: 'block', width: '100%', marginTop: 8,
-            background: 'var(--brand)', border: 'none', cursor: 'pointer',
-            padding: '13px', borderRadius: 9, color: theme === 'dark' ? '#fff' : '#1f2937',
+            background: '#0052F0', border: 'none', cursor: 'pointer',
+            padding: '13px', borderRadius: 9, color: '#fff',
             fontSize: 14, fontWeight: 600, textAlign: 'center',
-            boxShadow: '0 0 24px var(--shadow-brand)',
+            boxShadow: '0 0 24px rgba(0,82,240,0.3)',
           }}>
             Register Your Team →
           </button>
@@ -459,8 +412,7 @@ function Footer() {
             </p>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6 }}>
               Dept. of Computer Science & Engineering<br />
-              St. Peter's Engineering College<br />
-              Avadi, Chennai – 600 054
+              St. Peter's Engineering College, Hyderabad
             </p>
           </div>
         </div>
@@ -494,13 +446,10 @@ function Footer() {
 //  HOME PAGE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function HomePage({ setPage, theme }: { setPage: (p: Page) => void; theme: Theme }) {
+function HomePage({ setPage }: { setPage: (p: Page) => void }) {
   const time = useCountdown(EVENT_DATE)
   const isMobile = useWindowWidth() <= 680
   const go = (p: Page) => { setPage(p); window.scrollTo(0, 0) }
-  const heroTagline = theme === 'dark'
-    ? 'Observe. Think. Build. Defend.'
-    : 'Every Great Innovation Begins With Curiosity.'
 
   const countdownUnits = [
     { v: time.days, l: 'Days' },
@@ -516,8 +465,8 @@ function HomePage({ setPage, theme }: { setPage: (p: Page) => void; theme: Theme
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
         backgroundImage: [
-          'linear-gradient(var(--grid-line) 1px, transparent 1px)',
-          'linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)',
+          'linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px)',
+          'linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)',
         ].join(', '),
         backgroundSize: '72px 72px',
         maskImage: 'radial-gradient(ellipse 75% 75% at 50% 45%, black 35%, transparent 100%)',
@@ -527,9 +476,9 @@ function HomePage({ setPage, theme }: { setPage: (p: Page) => void; theme: Theme
       {/* Hero glow */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: theme === 'dark'
-          ? 'radial-gradient(ellipse 65% 50% at 50% 20%, rgba(37,99,235,0.17), transparent 100%)'
-          : 'radial-gradient(ellipse 65% 50% at 50% 20%, rgba(217,119,6,0.14), transparent 100%)',
+        background: [
+          'radial-gradient(ellipse 65% 50% at 50% 20%, rgba(0,82,240,0.13) 0%, transparent 100%)',
+        ].join(', '),
       }} />
 
       <div style={{
@@ -538,27 +487,23 @@ function HomePage({ setPage, theme }: { setPage: (p: Page) => void; theme: Theme
         alignItems: 'center', justifyContent: 'center',
         padding: isMobile ? '100px 20px 60px' : '120px 40px 80px',
         textAlign: 'center',
-        background: theme === 'dark'
-          ? 'linear-gradient(135deg, #0B0B0F, #17171C)'
-          : 'linear-gradient(135deg, #FFF8ED, #FFEBC8)',
-        transition: 'background 0.4s ease-in-out',
       }}>
 
         {/* Live badge */}
         <div className="anim-fade-up" style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: theme === 'dark' ? 'rgba(37,99,235,0.1)' : 'rgba(217,119,6,0.1)',
-          border: theme === 'dark' ? '1px solid rgba(37,99,235,0.28)' : '1px solid rgba(217,119,6,0.22)',
+          background: 'rgba(0,82,240,0.1)',
+          border: '1px solid rgba(0,82,240,0.28)',
           borderRadius: 100, padding: '5px 14px 5px 10px', marginBottom: 36,
           animationDelay: '0ms',
         }}>
           <span style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             width: 8, height: 8, borderRadius: '50%',
-            background: theme === 'dark' ? '#2563EB' : '#D97706',
+            background: '#2B72FF',
             animation: 'blink-dot 1.8s ease-in-out infinite',
           }} />
-          <span style={{ fontSize: 12, fontWeight: 600, color: theme === 'dark' ? '#4D90FF' : '#B45309', letterSpacing: '0.7px', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#4D90FF', letterSpacing: '0.7px', textTransform: 'uppercase' }}>
             ORIGIN Association · CSE · SPEC
           </span>
         </div>
@@ -571,6 +516,7 @@ function HomePage({ setPage, theme }: { setPage: (p: Page) => void; theme: Theme
             src="/originlogo.jpeg"
             alt="ORIGIN Association logo"
             style={{
+              display: 'block',
               width: 'clamp(120px, 18vw, 200px)',
               height: 'auto',
               borderRadius: 18,
@@ -599,19 +545,19 @@ function HomePage({ setPage, theme }: { setPage: (p: Page) => void; theme: Theme
         {/* Tagline */}
         <p className="anim-fade-up" style={{
           fontSize: isMobile ? 17 : 'clamp(18px, 2.2vw, 22px)',
-          fontWeight: 300, color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(45,45,45,0.68)',
+          fontWeight: 300, color: 'rgba(255,255,255,0.5)',
           marginBottom: 10, letterSpacing: '0.1px',
           animationDelay: '110ms',
         }}>
-          {heroTagline}
+          An 8-Hour Innovation Sprint
         </p>
 
         <p className="anim-fade-up" style={{
-          fontSize: 12, fontWeight: 600, color: theme === 'dark' ? 'rgba(255,255,255,0.22)' : 'rgba(45,45,45,0.32)',
+          fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.22)',
           letterSpacing: '3.5px', textTransform: 'uppercase', marginBottom: 48,
           animationDelay: '150ms',
         }}>
-          {theme === 'dark' ? 'Observe · Think · Build · Defend' : 'Explore · Prototype · Validate · Impact'}
+          Observe &nbsp;·&nbsp; Think &nbsp;·&nbsp; Build &nbsp;·&nbsp; Defend
         </p>
 
         {/* Event info */}
@@ -969,7 +915,7 @@ function RegistrationPage() {
           </div>
 
           <p style={{ color: 'rgba(255,255,255,0.28)', fontSize: 12, lineHeight: 1.8 }}>
-            Arrive by <strong style={{ color: 'rgba(255,255,255,0.6)' }}>8:30 AM</strong> on September 15, 2026. Carry your college ID.
+            Arrive by <strong style={{ color: 'rgba(255,255,255,0.6)' }}>8:30 AM</strong> on August 5, 2026. Carry your college ID.
           </p>
         </div>
       </div>
@@ -1420,21 +1366,6 @@ function RulebookPage({ setPage }: { setPage: (p: Page) => void }) {
 
 export default function App() {
   const [page, setPage] = useState<Page>('home')
-  const [theme, setTheme] = useState<Theme>(() => {
-    try {
-      const saved = window.localStorage.getItem('sankalp-theme')
-      return saved === 'light' ? 'light' : 'dark'
-    } catch {
-      return 'dark'
-    }
-  })
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme
-    try {
-      localStorage.setItem('sankalp-theme', theme)
-    } catch {}
-  }, [theme])
 
   useEffect(() => { localStorage.removeItem('s26_count') }, [])
 
@@ -1444,17 +1375,10 @@ export default function App() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: theme === 'dark' ? '#0B0B0F' : '#FFF8ED',
-      color: theme === 'dark' ? '#fff' : '#2D2D2D',
-      display: 'flex',
-      flexDirection: 'column',
-      transition: 'background 0.4s ease-in-out, color 0.4s ease-in-out',
-    }}>
-      <Nav page={page} setPage={navigate} theme={theme} setTheme={setTheme} />
+    <div style={{ minHeight: '100vh', background: '#000', color: '#fff', display: 'flex', flexDirection: 'column' }}>
+      <Nav page={page} setPage={navigate} />
       <main style={{ flex: 1 }}>
-        {page === 'home' && <HomePage setPage={navigate} theme={theme} />}
+        {page === 'home' && <HomePage setPage={navigate} />}
         {page === 'register' && <RegistrationPage />}
         {page === 'rulebook' && <RulebookPage setPage={navigate} />}
       </main>
