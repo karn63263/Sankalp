@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 
 const EVENT_DATE = new Date('2026-08-05T04:00:00Z') // 5 Aug 2026 9:30 AM IST
 const VENUE_SHORT = 'St. Peter\'s Engineering College, Hyderabad'
-const VENUE_FULL  = 'Main Seminar Hall, Block A, St. Peter\'s Engineering College, Hyderabad'
+const VENUE_FULL = 'Main Seminar Hall, Block A, St. Peter\'s Engineering College, Hyderabad'
 
 const DOMAINS = [
   'Healthcare',
@@ -83,11 +83,11 @@ const RULES = [
 ]
 
 const CRITERIA = [
-  { label: 'Problem Identification',  pct: '20%', desc: 'Clarity and depth of real-world problem scoping.' },
+  { label: 'Problem Identification', pct: '20%', desc: 'Clarity and depth of real-world problem scoping.' },
   { label: 'Innovation & Feasibility', pct: '25%', desc: 'How novel and practically implementable the solution is.' },
-  { label: 'Technical Execution',     pct: '25%', desc: 'Quality of prototype, code, or design artifacts produced.' },
-  { label: 'Presentation & Demo',     pct: '20%', desc: 'Storytelling clarity, structure, and live demonstration.' },
-  { label: 'Social Impact',           pct: '10%', desc: 'Potential for real-world positive change at scale.' },
+  { label: 'Technical Execution', pct: '25%', desc: 'Quality of prototype, code, or design artifacts produced.' },
+  { label: 'Presentation & Demo', pct: '20%', desc: 'Storytelling clarity, structure, and live demonstration.' },
+  { label: 'Social Impact', pct: '10%', desc: 'Potential for real-world positive change at scale.' },
 ]
 
 const DELIVERABLES = [
@@ -106,6 +106,7 @@ const SEG_COLORS = [
 ]
 
 type Page = 'home' | 'register' | 'rulebook'
+type Theme = 'dark' | 'light'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  HOOKS
@@ -128,8 +129,8 @@ function useCountdown(target: Date) {
     const d = target.getTime() - Date.now()
     if (d <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
     return {
-      days:    Math.floor(d / 86_400_000),
-      hours:   Math.floor((d % 86_400_000) / 3_600_000),
+      days: Math.floor(d / 86_400_000),
+      hours: Math.floor((d % 86_400_000) / 3_600_000),
       minutes: Math.floor((d % 3_600_000) / 60_000),
       seconds: Math.floor((d % 60_000) / 1_000),
     }
@@ -160,23 +161,23 @@ function generateTeamId(): string {
 
 const CX = 200
 const CY = 200
-const R  = 178   // outer radius
+const R = 178   // outer radius
 const RI = 30    // inner hub radius
 const RT = 114   // text placement radius
-const N  = DOMAINS.length
+const N = DOMAINS.length
 const SA = 360 / N  // segment angle = 18°
 
 const toRad = (deg: number) => (deg - 90) * (Math.PI / 180)
-const polar  = (deg: number, r: number) => ({
+const polar = (deg: number, r: number) => ({
   x: CX + r * Math.cos(toRad(deg)),
   y: CY + r * Math.sin(toRad(deg)),
 })
 
 function wedge(startDeg: number, endDeg: number): string {
   const s = polar(startDeg, R)
-  const e = polar(endDeg,   R)
+  const e = polar(endDeg, R)
   const i = polar(startDeg, RI)
-  const j = polar(endDeg,   RI)
+  const j = polar(endDeg, RI)
   // Donut-style path: outer arc → inner arc back
   return [
     `M ${i.x.toFixed(2)} ${i.y.toFixed(2)}`,
@@ -259,12 +260,56 @@ function Confetti({ active }: { active: boolean }) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const NAV_LINKS: { label: string; page: Page }[] = [
-  { label: 'Home',     page: 'home'     },
+  { label: 'Home', page: 'home' },
   { label: 'Register', page: 'register' },
   { label: 'Rulebook', page: 'rulebook' },
 ]
 
-function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
+function ThemeToggle({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
+  const isDark = theme === 'dark'
+
+  return (
+    <button
+      type="button"
+      aria-label="Toggle color theme"
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      style={{
+        width: 52,
+        height: 30,
+        borderRadius: 999,
+        border: '1px solid var(--border)',
+        background: 'var(--toggle-bg)',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: isDark ? 'flex-end' : 'flex-start',
+        padding: '4px 6px',
+        cursor: 'pointer',
+        transition: 'all 0.4s ease-in-out',
+        boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.12)',
+      }}
+    >
+      <span
+        style={{
+          width: 18,
+          height: 18,
+          borderRadius: '50%',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--toggle-knob)',
+          color: isDark ? '#2563EB' : '#D97706',
+          fontSize: 10,
+          boxShadow: '0 4px 12px var(--shadow-brand)',
+          transition: 'all 0.4s ease-in-out',
+        }}
+      >
+        {isDark ? '☾' : '☀'}
+      </span>
+    </button>
+  )
+}
+
+function Nav({ page, setPage, theme, setTheme }: { page: Page; setPage: (p: Page) => void; theme: Theme; setTheme: (t: Theme) => void }) {
   const [open, setOpen] = useState(false)
   const isMobile = useWindowWidth() <= 680
 
@@ -273,10 +318,11 @@ function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
   return (
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 300,
-      background: 'rgba(0,0,0,0.82)',
+      background: 'var(--bg-elevated)',
       backdropFilter: 'blur(28px) saturate(1.6)',
       WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
-      borderBottom: '1px solid rgba(255,255,255,0.07)',
+      borderBottom: '1px solid var(--border)',
+      transition: 'all 0.4s ease-in-out',
     }}>
       <div style={{
         maxWidth: 1160, margin: '0 auto', padding: '0 28px',
@@ -284,8 +330,8 @@ function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
       }}>
         {/* Wordmark */}
         <button onClick={() => go('home')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'baseline', gap: 0, padding: 0 }}>
-          <span style={{ color: '#fff', fontWeight: 800, fontSize: 16, letterSpacing: '-0.5px' }}>SANKALP</span>
-          <span style={{ color: '#2B72FF', fontWeight: 800, fontSize: 16, letterSpacing: '-0.5px' }}>'26</span>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: 16, letterSpacing: '-0.5px' }}>SANKALP</span>
+          <span style={{ color: 'var(--brand)', fontWeight: 800, fontSize: 16, letterSpacing: '-0.5px' }}>'26</span>
         </button>
 
         {/* Desktop links */}
@@ -293,10 +339,10 @@ function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
           <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             {NAV_LINKS.map(l => (
               <button key={l.page} onClick={() => go(l.page)} style={{
-                background: page === l.page ? 'rgba(255,255,255,0.08)' : 'none',
+                background: page === l.page ? 'var(--bg-soft)' : 'none',
                 border: 'none', cursor: 'pointer',
                 padding: '6px 14px', borderRadius: 7,
-                color: page === l.page ? '#fff' : 'rgba(255,255,255,0.42)',
+                color: page === l.page ? 'var(--text-primary)' : 'var(--text-muted)',
                 fontSize: 13.5, fontWeight: page === l.page ? 500 : 400,
                 transition: 'all 0.15s ease', letterSpacing: '0.1px',
               }}>
@@ -308,22 +354,23 @@ function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
 
         {/* Right side */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <ThemeToggle theme={theme} setTheme={setTheme} />
           {!isMobile && (
             <button onClick={() => go('register')} style={{
-              background: '#0052F0', border: 'none', cursor: 'pointer',
-              padding: '7px 18px', borderRadius: 8, color: '#fff',
+              background: 'var(--brand)', border: 'none', cursor: 'pointer',
+              padding: '7px 18px', borderRadius: 8, color: theme === 'dark' ? '#fff' : '#1f2937',
               fontSize: 13, fontWeight: 600, letterSpacing: '0.1px',
-              transition: 'all 0.18s ease', boxShadow: '0 0 20px rgba(0,82,240,0.35)',
+              transition: 'all 0.18s ease', boxShadow: '0 0 20px var(--shadow-brand)',
             }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1A64FF' }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#0052F0' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.filter = 'brightness(1.06)' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.filter = 'none' }}
             >
               Register
             </button>
           )}
           {isMobile && (
             <button onClick={() => setOpen(o => !o)} style={{
-              background: open ? 'rgba(255,255,255,0.08)' : 'none',
+              background: open ? 'var(--bg-soft)' : 'none',
               border: 'none', cursor: 'pointer',
               padding: '8px', borderRadius: 7,
               display: 'flex', flexDirection: 'column', gap: 4.5, alignItems: 'center',
@@ -333,12 +380,12 @@ function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
                 <span key={i} style={{
                   display: 'block', width: 18,
                   height: open && i === 1 ? 0 : 1.5,
-                  background: 'rgba(255,255,255,0.7)',
+                  background: 'var(--text-primary)',
                   borderRadius: 2,
                   transform: open
                     ? i === 0 ? 'rotate(45deg) translate(3px, 4px)'
-                    : i === 2 ? 'rotate(-45deg) translate(3px, -4px)'
-                    : 'none' : 'none',
+                      : i === 2 ? 'rotate(-45deg) translate(3px, -4px)'
+                        : 'none' : 'none',
                   transition: 'all 0.2s',
                   opacity: open && i === 1 ? 0 : 1,
                 }} />
@@ -351,27 +398,27 @@ function Nav({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
       {/* Mobile menu drawer */}
       {isMobile && open && (
         <div style={{
-          background: '#050505', borderTop: '1px solid rgba(255,255,255,0.07)',
+          background: 'var(--bg)', borderTop: '1px solid var(--border)',
           padding: '6px 16px 20px',
           animation: 'fade-in 0.18s ease',
         }}>
           {NAV_LINKS.map(l => (
             <button key={l.page} onClick={() => go(l.page)} style={{
               display: 'block', width: '100%', textAlign: 'left',
-              background: page === l.page ? 'rgba(255,255,255,0.05)' : 'none',
+              background: page === l.page ? 'var(--bg-soft)' : 'none',
               border: 'none', cursor: 'pointer',
               padding: '13px 12px', borderRadius: 8, marginBottom: 2,
-              color: page === l.page ? '#fff' : 'rgba(255,255,255,0.5)',
+              color: page === l.page ? 'var(--text-primary)' : 'var(--text-muted)',
               fontSize: 15, fontWeight: page === l.page ? 600 : 400,
               transition: 'all 0.12s',
             }}>{l.label}</button>
           ))}
           <button onClick={() => go('register')} style={{
             display: 'block', width: '100%', marginTop: 8,
-            background: '#0052F0', border: 'none', cursor: 'pointer',
-            padding: '13px', borderRadius: 9, color: '#fff',
+            background: 'var(--brand)', border: 'none', cursor: 'pointer',
+            padding: '13px', borderRadius: 9, color: theme === 'dark' ? '#fff' : '#1f2937',
             fontSize: 14, fontWeight: 600, textAlign: 'center',
-            boxShadow: '0 0 24px rgba(0,82,240,0.3)',
+            boxShadow: '0 0 24px var(--shadow-brand)',
           }}>
             Register Your Team →
           </button>
@@ -447,14 +494,17 @@ function Footer() {
 //  HOME PAGE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function HomePage({ setPage }: { setPage: (p: Page) => void }) {
+function HomePage({ setPage, theme }: { setPage: (p: Page) => void; theme: Theme }) {
   const time = useCountdown(EVENT_DATE)
   const isMobile = useWindowWidth() <= 680
   const go = (p: Page) => { setPage(p); window.scrollTo(0, 0) }
+  const heroTagline = theme === 'dark'
+    ? 'Observe. Think. Build. Defend.'
+    : 'Every Great Innovation Begins With Curiosity.'
 
   const countdownUnits = [
-    { v: time.days,    l: 'Days'    },
-    { v: time.hours,   l: 'Hours'   },
+    { v: time.days, l: 'Days' },
+    { v: time.hours, l: 'Hours' },
     { v: time.minutes, l: 'Minutes' },
     { v: time.seconds, l: 'Seconds' },
   ]
@@ -466,8 +516,8 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
         backgroundImage: [
-          'linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px)',
-          'linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)',
+          'linear-gradient(var(--grid-line) 1px, transparent 1px)',
+          'linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)',
         ].join(', '),
         backgroundSize: '72px 72px',
         maskImage: 'radial-gradient(ellipse 75% 75% at 50% 45%, black 35%, transparent 100%)',
@@ -477,9 +527,9 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
       {/* Hero glow */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: [
-          'radial-gradient(ellipse 65% 50% at 50% 20%, rgba(0,82,240,0.13) 0%, transparent 100%)',
-        ].join(', '),
+        background: theme === 'dark'
+          ? 'radial-gradient(ellipse 65% 50% at 50% 20%, rgba(37,99,235,0.17), transparent 100%)'
+          : 'radial-gradient(ellipse 65% 50% at 50% 20%, rgba(217,119,6,0.14), transparent 100%)',
       }} />
 
       <div style={{
@@ -488,23 +538,27 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
         alignItems: 'center', justifyContent: 'center',
         padding: isMobile ? '100px 20px 60px' : '120px 40px 80px',
         textAlign: 'center',
+        background: theme === 'dark'
+          ? 'linear-gradient(135deg, #0B0B0F, #17171C)'
+          : 'linear-gradient(135deg, #FFF8ED, #FFEBC8)',
+        transition: 'background 0.4s ease-in-out',
       }}>
 
         {/* Live badge */}
         <div className="anim-fade-up" style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: 'rgba(0,82,240,0.1)',
-          border: '1px solid rgba(0,82,240,0.28)',
+          background: theme === 'dark' ? 'rgba(37,99,235,0.1)' : 'rgba(217,119,6,0.1)',
+          border: theme === 'dark' ? '1px solid rgba(37,99,235,0.28)' : '1px solid rgba(217,119,6,0.22)',
           borderRadius: 100, padding: '5px 14px 5px 10px', marginBottom: 36,
           animationDelay: '0ms',
         }}>
           <span style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             width: 8, height: 8, borderRadius: '50%',
-            background: '#2B72FF',
+            background: theme === 'dark' ? '#2563EB' : '#D97706',
             animation: 'blink-dot 1.8s ease-in-out infinite',
           }} />
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#4D90FF', letterSpacing: '0.7px', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: theme === 'dark' ? '#4D90FF' : '#B45309', letterSpacing: '0.7px', textTransform: 'uppercase' }}>
             ORIGIN Association · CSE · SPEC
           </span>
         </div>
@@ -545,19 +599,19 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
         {/* Tagline */}
         <p className="anim-fade-up" style={{
           fontSize: isMobile ? 17 : 'clamp(18px, 2.2vw, 22px)',
-          fontWeight: 300, color: 'rgba(255,255,255,0.5)',
+          fontWeight: 300, color: theme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(45,45,45,0.68)',
           marginBottom: 10, letterSpacing: '0.1px',
           animationDelay: '110ms',
         }}>
-          An 8-Hour Innovation Sprint
+          {heroTagline}
         </p>
 
         <p className="anim-fade-up" style={{
-          fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.22)',
+          fontSize: 12, fontWeight: 600, color: theme === 'dark' ? 'rgba(255,255,255,0.22)' : 'rgba(45,45,45,0.32)',
           letterSpacing: '3.5px', textTransform: 'uppercase', marginBottom: 48,
           animationDelay: '150ms',
         }}>
-          Observe &nbsp;·&nbsp; Think &nbsp;·&nbsp; Build &nbsp;·&nbsp; Defend
+          {theme === 'dark' ? 'Observe · Think · Build · Defend' : 'Explore · Prototype · Validate · Impact'}
         </p>
 
         {/* Event info */}
@@ -568,8 +622,8 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
         }}>
           {[
             { icon: '📅', text: 'August 5, 2026' },
-            { icon: '📍', text: VENUE_SHORT           },
-            { icon: '⏱',  text: '8-Hour Sprint'       },
+            { icon: '📍', text: VENUE_SHORT },
+            { icon: '⏱', text: '8-Hour Sprint' },
           ].map(item => (
             <div key={item.text} style={{
               display: 'inline-flex', alignItems: 'center', gap: 7,
@@ -744,7 +798,7 @@ const WA_NUMBER = '919110568327'
 
 type FormState = {
   teamName: string
-  leader: string;  roll1: string
+  leader: string; roll1: string
   member2: string; roll2: string
   member3: string; roll3: string
   branch: string; year: string; mobile: string
@@ -802,18 +856,18 @@ function rWedge(startDeg: number, endDeg: number): string {
 }
 
 function RegistrationPage() {
-  const [form, setForm]         = useState<FormState>(EMPTY)
-  const [errors, setErrors]     = useState<Partial<Record<keyof FormState | 'wheel', string>>>({})
+  const [form, setForm] = useState<FormState>(EMPTY)
+  const [errors, setErrors] = useState<Partial<Record<keyof FormState | 'wheel', string>>>({})
   const [wheelRot, setWheelRot] = useState(0)
   const [spinning, setSpinning] = useState(false)
-  const [hasSpun, setHasSpun]   = useState(false)
+  const [hasSpun, setHasSpun] = useState(false)
   const [domainIdx, setDomainIdx] = useState<number | null>(null)
   const [confetti, setConfetti] = useState(false)
-  const [sent, setSent]         = useState(false)
-  const [teamId, setTeamId]     = useState('')
+  const [sent, setSent] = useState(false)
+  const [teamId, setTeamId] = useState('')
   const spinTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const wheelRef  = useRef<HTMLDivElement>(null)
-  const isMobile  = useWindowWidth() <= 680
+  const wheelRef = useRef<HTMLDivElement>(null)
+  const isMobile = useWindowWidth() <= 680
 
   useEffect(() => () => { if (spinTimer.current) clearTimeout(spinTimer.current) }, [])
 
@@ -826,10 +880,10 @@ function RegistrationPage() {
   const validateForm = (): boolean => {
     const e: Partial<Record<keyof FormState | 'wheel', string>> = {}
     if (!form.teamName.trim()) e.teamName = 'Required'
-    if (!form.leader.trim())   e.leader   = 'Required'
-    if (!form.roll1.trim())    e.roll1    = 'Required'
-    if (!form.branch.trim())   e.branch   = 'Required'
-    if (!form.year)            e.year     = 'Required'
+    if (!form.leader.trim()) e.leader = 'Required'
+    if (!form.roll1.trim()) e.roll1 = 'Required'
+    if (!form.branch.trim()) e.branch = 'Required'
+    if (!form.year) e.year = 'Required'
     if (!/^\d{10}$/.test(form.mobile.trim())) e.mobile = 'Enter a valid 10-digit number'
     if (!hasSpun) e.wheel = 'Please spin the wheel to get your domain before registering.'
     setErrors(e)
@@ -838,9 +892,9 @@ function RegistrationPage() {
 
   const doSpin = () => {
     if (spinning || hasSpun) return
-    const target   = Math.floor(Math.random() * N)
+    const target = Math.floor(Math.random() * N)
     const finalOff = ((270 - (target + 0.5) * SA) % 360 + 360) % 360
-    const total    = Math.ceil((wheelRot + 360 * 8) / 360) * 360 + finalOff
+    const total = Math.ceil((wheelRot + 360 * 8) / 360) * 360 + finalOff
     setSpinning(true)
     setConfetti(false)
     setWheelRot(total)
@@ -856,7 +910,7 @@ function RegistrationPage() {
 
   const handleRegister = () => {
     if (!validateForm()) return
-    const id  = generateTeamId()
+    const id = generateTeamId()
     const dom = DOMAINS[domainIdx!]
     const msg = buildWhatsAppMessage(form, id, dom)
     setTeamId(id)
@@ -906,8 +960,8 @@ function RegistrationPage() {
 
           <div style={{ background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.2)', borderRadius: 10, padding: '14px 18px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 10 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.851L.057 23.854a.5.5 0 0 0 .609.61l6.101-1.485A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.877 9.877 0 0 1-5.021-1.368l-.36-.214-3.724.906.935-3.633-.235-.374A9.843 9.843 0 0 1 2.118 12C2.118 6.54 6.54 2.118 12 2.118S21.882 6.54 21.882 12 17.46 21.882 12 21.882z"/>
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.851L.057 23.854a.5.5 0 0 0 .609.61l6.101-1.485A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.877 9.877 0 0 1-5.021-1.368l-.36-.214-3.724.906.935-3.633-.235-.374A9.843 9.843 0 0 1 2.118 12C2.118 6.54 6.54 2.118 12 2.118S21.882 6.54 21.882 12 17.46 21.882 12 21.882z" />
             </svg>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
               Your details were sent to the organizer via WhatsApp. Check your phone if the chat didn't open.
@@ -1072,8 +1126,8 @@ function RegistrationPage() {
                   return <line key={`rt${i}`} x1={inn.x} y1={inn.y} x2={o.x} y2={o.y} stroke="rgba(0,0,0,0.45)" strokeWidth="0.7" />
                 })}
                 <circle cx={RW_CX} cy={RW_CY} r={RW_RI + 8} fill="#060606" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                <circle cx={RW_CX} cy={RW_CY} r={RW_RI}     fill="#000"    stroke="rgba(43,114,255,0.4)"   strokeWidth="1" />
-                <circle cx={RW_CX} cy={RW_CY} r={5}          fill="#2B72FF" />
+                <circle cx={RW_CX} cy={RW_CY} r={RW_RI} fill="#000" stroke="rgba(43,114,255,0.4)" strokeWidth="1" />
+                <circle cx={RW_CX} cy={RW_CY} r={5} fill="#2B72FF" />
               </g>
               <circle cx={RW_CX} cy={RW_CY} r={RW_R + 1} fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="1" />
             </svg>
@@ -1129,8 +1183,8 @@ function RegistrationPage() {
         <div style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: isMobile ? '20px 18px' : '24px 26px', marginBottom: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.851L.057 23.854a.5.5 0 0 0 .609.61l6.101-1.485A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.877 9.877 0 0 1-5.021-1.368l-.36-.214-3.724.906.935-3.633-.235-.374A9.843 9.843 0 0 1 2.118 12C2.118 6.54 6.54 2.118 12 2.118S21.882 6.54 21.882 12 17.46 21.882 12 21.882z"/>
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.851L.057 23.854a.5.5 0 0 0 .609.61l6.101-1.485A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.877 9.877 0 0 1-5.021-1.368l-.36-.214-3.724.906.935-3.633-.235-.374A9.843 9.843 0 0 1 2.118 12C2.118 6.54 6.54 2.118 12 2.118S21.882 6.54 21.882 12 17.46 21.882 12 21.882z" />
             </svg>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>
               Clicking Register will open WhatsApp with your details pre-filled.
@@ -1160,8 +1214,8 @@ function RegistrationPage() {
           }}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.851L.057 23.854a.5.5 0 0 0 .609.61l6.101-1.485A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.877 9.877 0 0 1-5.021-1.368l-.36-.214-3.724.906.935-3.633-.235-.374A9.843 9.843 0 0 1 2.118 12C2.118 6.54 6.54 2.118 12 2.118S21.882 6.54 21.882 12 17.46 21.882 12 21.882z"/>
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.522 5.851L.057 23.854a.5.5 0 0 0 .609.61l6.101-1.485A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.877 9.877 0 0 1-5.021-1.368l-.36-.214-3.724.906.935-3.633-.235-.374A9.843 9.843 0 0 1 2.118 12C2.118 6.54 6.54 2.118 12 2.118S21.882 6.54 21.882 12 17.46 21.882 12 21.882z" />
           </svg>
           Register via WhatsApp
         </button>
@@ -1366,6 +1420,21 @@ function RulebookPage({ setPage }: { setPage: (p: Page) => void }) {
 
 export default function App() {
   const [page, setPage] = useState<Page>('home')
+  const [theme, setTheme] = useState<Theme>(() => {
+    try {
+      const saved = window.localStorage.getItem('sankalp-theme')
+      return saved === 'light' ? 'light' : 'dark'
+    } catch {
+      return 'dark'
+    }
+  })
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    try {
+      localStorage.setItem('sankalp-theme', theme)
+    } catch {}
+  }, [theme])
 
   useEffect(() => { localStorage.removeItem('s26_count') }, [])
 
@@ -1375,10 +1444,17 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000', color: '#fff', display: 'flex', flexDirection: 'column' }}>
-      <Nav page={page} setPage={navigate} />
+    <div style={{
+      minHeight: '100vh',
+      background: theme === 'dark' ? '#0B0B0F' : '#FFF8ED',
+      color: theme === 'dark' ? '#fff' : '#2D2D2D',
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'background 0.4s ease-in-out, color 0.4s ease-in-out',
+    }}>
+      <Nav page={page} setPage={navigate} theme={theme} setTheme={setTheme} />
       <main style={{ flex: 1 }}>
-        {page === 'home'     && <HomePage    setPage={navigate} />}
+        {page === 'home' && <HomePage setPage={navigate} theme={theme} />}
         {page === 'register' && <RegistrationPage />}
         {page === 'rulebook' && <RulebookPage setPage={navigate} />}
       </main>

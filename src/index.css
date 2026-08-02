@@ -14,14 +14,96 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+:root {
+  --bg: #0B0B0F;
+  --bg-elevated: #17171C;
+  --bg-soft: rgba(255,255,255,0.04);
+  --bg-strong: rgba(255,255,255,0.08);
+  --surface: #17171C;
+  --surface-soft: rgba(255,255,255,0.03);
+  --card: #17171C;
+  --card-strong: rgba(255,255,255,0.02);
+  --text-strong: #F8FAFC;
+  --text-primary: #F8FAFC;
+  --text-soft: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.38);
+  --text-faint: rgba(255,255,255,0.2);
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.14);
+  --brand: #2563EB;
+  --brand-strong: #0052F0;
+  --brand-soft: rgba(37, 99, 235, 0.12);
+  --brand-glow: rgba(37, 99, 235, 0.25);
+  --shadow-soft: rgba(0, 0, 0, 0.38);
+  --shadow-brand: rgba(37, 99, 235, 0.35);
+  --grid-line: rgba(255,255,255,0.022);
+  --toggle-bg: rgba(255,255,255,0.08);
+  --toggle-knob: #F8FAFC;
+  --paper: #FFF8ED;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #FFF8ED;
+  --bg-elevated: #FFFDF9;
+  --bg-soft: rgba(17,17,17,0.04);
+  --bg-strong: rgba(17,17,17,0.07);
+  --surface: #FFFDF9;
+  --surface-soft: rgba(17,17,17,0.03);
+  --card: #FFFDF9;
+  --card-strong: rgba(17,17,17,0.02);
+  --text-strong: #2D2D2D;
+  --text-primary: #2D2D2D;
+  --text-soft: #5B5B5B;
+  --text-muted: #6B7280;
+  --text-faint: rgba(45,45,45,0.24);
+  --border: #F3E6D0;
+  --border-strong: rgba(145,94,24,0.14);
+  --brand: #D97706;
+  --brand-strong: #F59E0B;
+  --brand-soft: rgba(217, 119, 6, 0.12);
+  --brand-glow: rgba(217, 119, 6, 0.18);
+  --shadow-soft: rgba(117, 81, 20, 0.12);
+  --shadow-brand: rgba(217, 119, 6, 0.2);
+  --grid-line: rgba(98, 70, 17, 0.05);
+  --toggle-bg: rgba(217, 119, 6, 0.12);
+  --toggle-knob: #FFFDF9;
+  --paper: #FFF8ED;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  background: var(--bg);
+}
+
 body {
-  background: #000;
-  color: #fff;
+  background: var(--bg);
+  color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   line-height: 1.5;
+  transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(rgba(255,255,255,0.03), rgba(255,255,255,0.03));
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+
+:root[data-theme='light'] body::before {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.45;
 }
 
 input, select, textarea, button {
@@ -29,8 +111,8 @@ input, select, textarea, button {
 }
 
 ::selection {
-  background: rgba(0, 87, 255, 0.3);
-  color: #fff;
+  background: rgba(37, 99, 235, 0.2);
+  color: var(--text-strong);
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
