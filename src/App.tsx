@@ -55,17 +55,72 @@ const WHEEL_LABELS = [
 ]
 
 const TIMELINE = [
-  { time: '09:30', period: 'AM', label: 'Registration & Reporting', note: 'Students report to the venue. Activities: Registration Verification, Team Confirmation, ID Card Verification, Welcome Kit Distribution, Seating Arrangement, Background Music, and Sponsor Displays.' },
-  { time: '09:50', period: 'AM', label: 'Entry Closure', note: 'Doors close. No more registrations. Laptop setup and internet check.' },
-  { time: '10:00', period: 'AM', label: 'Welcome Address', note: 'Host welcomes everyone.' },
-  { time: '10:03', period: 'AM', label: 'ORIGIN Introduction', note: 'About ORIGIN, vision, and why SANKALP exists.' },
-  { time: '10:10', period: 'AM', label: 'Event Briefing', note: 'Rules, timeline, evaluation, and deliverables. No surprises later.' },
-  { time: '10:30', period: 'AM', label: 'Domain Reveal', note: 'Every team receives one domain. Example: Healthcare, Agriculture, Education, Cyber Security, Environment, Tourism, Banking, Women Safety, and more.' },
-  { time: '10:35', period: 'AM', label: 'Phase 1 · Problem Discovery', note: 'Internet and research are allowed. Goal: find one real-world problem. Deliverables: Problem Statement, Target Users, Existing Solutions, and Gap Analysis.' },
-  { time: '11:00', period: 'AM', label: 'Mentor Validation Round', note: 'Mentors visit every table. Questions cover problem significance, evidence, market, user needs, and why current solutions fail. Only validated problems move ahead.' },
-  { time: '12:00', period: 'PM', label: 'Lunch Break', note: 'Networking, mentor discussions, and sponsor booth visits.' },
-  { time: '01:00', period: 'PM', label: 'Build Sprint', note: 'The silent zone: no announcements. Only mentors move around. Deliverables: Working MVP, presentation, and prototype.' },
-  { time: '03:30', period: 'PM', label: 'Submission Window', note: 'Submit your PPT, prototype, and submission form. Late submissions are not accepted.' },
+  {
+    time: '09:30',
+    period: 'AM',
+    label: 'Registration & Reporting',
+    note: 'Students report to the venue.\n\nActivities:\n• Registration Verification\n• Team Confirmation\n• ID Card Verification\n• Welcome Kit Distribution\n• Seating Arrangement\n• Background Music\n• Sponsor Displays',
+  },
+  {
+    time: '09:50',
+    period: 'AM',
+    label: 'Entry Closure',
+    note: 'Doors close.\n\nNo more registrations.\nLaptop setup.\nInternet check.',
+  },
+  {
+    time: '10:00',
+    period: 'AM',
+    label: 'Welcome Address',
+    note: 'Host welcomes everyone.',
+  },
+  {
+    time: '10:03',
+    period: 'AM',
+    label: 'ORIGIN Introduction',
+    note: '• About ORIGIN\n• Vision\n• Why SANKALP exists',
+  },
+  {
+    time: '10:10',
+    period: 'AM',
+    label: 'Event Briefing',
+    note: 'Explain\n\n• Rules\n• Timeline\n• Evaluation\n• Deliverables\n\nNo surprises later.',
+  },
+  {
+    time: '10:30',
+    period: 'AM',
+    label: 'Domain Reveal',
+    note: 'Every team receives\n\nONE DOMAIN.\n\nExample\n• Healthcare\n• Agriculture\n• Education\n• Cyber Security\n• Environment\n• Tourism\n• Banking\n• Women Safety\n• etc.',
+  },
+  {
+    time: '10:35',
+    period: 'AM',
+    label: 'Phase 1 · Problem Discovery',
+    note: 'Internet allowed.\nResearch allowed.\nDiscussion allowed.\n\nGoal:\nFind ONE real-world problem.\n\nDeliverables:\n• Problem Statement\n• Target Users\n• Existing Solutions\n• Gap Analysis',
+  },
+  {
+    time: '11:00',
+    period: 'AM',
+    label: 'Mentor Validation Round',
+    note: 'Mentors visit every table.\n\nQuestions:\n• Why this problem?\n• Evidence?\n• Market?\n• Users?\n• Why current solutions fail?\n\nOnly validated problems move ahead.',
+  },
+  {
+    time: '12:00',
+    period: 'PM',
+    label: 'Lunch Break',
+    note: 'Networking.\nMentor discussions.\nSponsor booth visits.',
+  },
+  {
+    time: '01:00',
+    period: 'PM',
+    label: 'Build Sprint',
+    note: 'The Silent Zone:\n• No announcements\n• Only mentors move around\n\nDeliverables:\n• Working MVP\n• Presentation\n• Prototype',
+  },
+  {
+    time: '03:30',
+    period: 'PM',
+    label: 'Submission Window',
+    note: 'Submit\n• PPT\n• Prototype\n• Submission Form\n\nLate submissions not accepted.',
+  },
 ]
 
 const RULES = [
@@ -1316,7 +1371,12 @@ function RulebookPage({ setPage }: { setPage: (p: Page) => void }) {
                     <p style={{ fontSize: 14, fontWeight: 600, color: '#fff', marginBottom: 4, lineHeight: 1.3 }}>
                       {item.label}
                     </p>
-                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6 }}>
+                    <p style={{
+                      fontSize: 12,
+                      color: 'rgba(255,255,255,0.35)',
+                      lineHeight: 1.6,
+                      whiteSpace: 'pre-line',
+                    }}>
                       {item.note}
                     </p>
                   </div>
