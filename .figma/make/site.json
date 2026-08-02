@@ -1,0 +1,10 @@
+{
+  "description": "Designed for participants of SANKALP'26, this sleek, responsive event website streamlines registration, domain assignment, and event details for a focused innovation experience.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
