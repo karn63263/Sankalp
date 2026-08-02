@@ -55,16 +55,17 @@ const WHEEL_LABELS = [
 ]
 
 const TIMELINE = [
-  { time: '08:30', period: 'AM', label: 'Registration & Check-in',  note: 'Arrive early. Collect your team kit and ID.' },
-  { time: '09:00', period: 'AM', label: 'Opening Ceremony',          note: 'Welcome address by ORIGIN Association & faculty.' },
-  { time: '09:30', period: 'AM', label: 'Domain Assignment',         note: 'The wheel spins. Your domain is locked.' },
-  { time: '10:00', period: 'AM', label: 'Problem Discovery',         note: 'Identify and scope your real-world problem.' },
-  { time: '11:00', period: 'AM', label: 'Mentor Validation',         note: 'Present your problem statement to the panel.' },
-  { time: '01:00', period: 'PM', label: 'Lunch Break',               note: '45 minutes. Regroup and refuel.' },
-  { time: '01:45', period: 'PM', label: 'Design Sprint',             note: 'Wireframes, flows, solution architecture.' },
-  { time: '03:30', period: 'PM', label: 'Build Sprint',              note: 'Code, prototype, or construct your solution.' },
-  { time: '05:00', period: 'PM', label: 'Demo Presentations',        note: '5 minutes per team. Make every second count.' },
-  { time: '06:00', period: 'PM', label: 'Prize Distribution',        note: 'Champions are recognized. Achievements celebrated.' },
+  { time: '09:30', period: 'AM', label: 'Registration & Reporting', note: 'Students report to the venue. Activities: Registration Verification, Team Confirmation, ID Card Verification, Welcome Kit Distribution, Seating Arrangement, Background Music, and Sponsor Displays.' },
+  { time: '09:50', period: 'AM', label: 'Entry Closure', note: 'Doors close. No more registrations. Laptop setup and internet check.' },
+  { time: '10:00', period: 'AM', label: 'Welcome Address', note: 'Host welcomes everyone.' },
+  { time: '10:03', period: 'AM', label: 'ORIGIN Introduction', note: 'About ORIGIN, vision, and why SANKALP exists.' },
+  { time: '10:10', period: 'AM', label: 'Event Briefing', note: 'Rules, timeline, evaluation, and deliverables. No surprises later.' },
+  { time: '10:30', period: 'AM', label: 'Domain Reveal', note: 'Every team receives one domain. Example: Healthcare, Agriculture, Education, Cyber Security, Environment, Tourism, Banking, Women Safety, and more.' },
+  { time: '10:35', period: 'AM', label: 'Phase 1 · Problem Discovery', note: 'Internet and research are allowed. Goal: find one real-world problem. Deliverables: Problem Statement, Target Users, Existing Solutions, and Gap Analysis.' },
+  { time: '11:00', period: 'AM', label: 'Mentor Validation Round', note: 'Mentors visit every table. Questions cover problem significance, evidence, market, user needs, and why current solutions fail. Only validated problems move ahead.' },
+  { time: '12:00', period: 'PM', label: 'Lunch Break', note: 'Networking, mentor discussions, and sponsor booth visits.' },
+  { time: '01:00', period: 'PM', label: 'Build Sprint', note: 'The silent zone: no announcements. Only mentors move around. Deliverables: Working MVP, presentation, and prototype.' },
+  { time: '03:30', period: 'PM', label: 'Submission Window', note: 'Submit your PPT, prototype, and submission form. Late submissions are not accepted.' },
 ]
 
 const RULES = [
