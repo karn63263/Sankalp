@@ -1,0 +1,10 @@
+{
+  "description": "Effortlessly generate and verify certificates for SANKALP'26 participants using roll numbers, providing a premium, immersive experience without manual input.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
