@@ -185,9 +185,7 @@ function LoginScreen({ password, setPassword, error, onLogin }: {
         }}>
           Access Control Center →
         </button>
-        <p style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.15)', marginTop: 24, letterSpacing: '0.1em' }}>
-          DEFAULT PASSWORD: sankalp2026
-        </p>
+
       </motion.div>
     </div>
   );
