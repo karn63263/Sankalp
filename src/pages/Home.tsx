@@ -86,8 +86,7 @@ export default function Home({ state, setState }: HomeProps) {
   }, []);
 
   const hasSheets = (state.verifySheets ?? []).length > 0;
-  const canGenerate = form.name.trim().length > 0 &&
-    (!hasSheets || nameStatus === 'found');
+  const canGenerate = form.name.trim().length > 0;
 
   const handleGenerate = async () => {
     if (!form.name.trim() || stage !== 'hero') return;
@@ -101,12 +100,7 @@ export default function Home({ state, setState }: HomeProps) {
       return;
     }
 
-    // If sheets loaded, verify name exists
-    if (hasSheets && nameStatus !== 'found') {
-      setStage('notfound');
-      return;
-    }
-
+    // Always generate regardless of name match
     setStage('generating');
     setStepIdx(0);
 
@@ -461,18 +455,7 @@ function FormStage({ form, setForm, nameStatus, hasSheets, canGenerate, onGenera
               </motion.div>
             )}
 
-            {/* Not found inline hint */}
-            <AnimatePresence>
-              {nameStatus === 'notfound' && form.name.trim() && hasSheets && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                  style={{ padding: '10px 14px', background: 'rgba(255,77,77,0.07)', border: '1px solid rgba(255,77,77,0.2)', borderRadius: 9, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <AlertCircle size={13} color="#ff6b6b" />
-                  <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#ff6b6b' }}>
-                    Name not found in the participant list. Check spelling and try again.
-                  </span>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Not found inline hint - removed: generate in any situation */}
 
             <motion.button onClick={onGenerate} disabled={!canGenerate}
               whileHover={canGenerate ? { scale: 1.03, boxShadow: `0 0 48px rgba(61,255,160,0.5)` } : {}}
